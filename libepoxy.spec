@@ -4,10 +4,10 @@
 #
 %define keepstatic 1
 Name     : libepoxy
-Version  : 1.5.7
-Release  : 40
-URL      : https://github.com/anholt/libepoxy/releases/download/1.5.7/libepoxy-1.5.7.tar.xz
-Source0  : https://github.com/anholt/libepoxy/releases/download/1.5.7/libepoxy-1.5.7.tar.xz
+Version  : 1.5.8
+Release  : 41
+URL      : https://github.com/anholt/libepoxy/releases/download/1.5.8/libepoxy-1.5.8.tar.xz
+Source0  : https://github.com/anholt/libepoxy/releases/download/1.5.8/libepoxy-1.5.8.tar.xz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : MIT
@@ -84,10 +84,10 @@ license components for the libepoxy package.
 
 
 %prep
-%setup -q -n libepoxy-1.5.7
-cd %{_builddir}/libepoxy-1.5.7
+%setup -q -n libepoxy-1.5.8
+cd %{_builddir}/libepoxy-1.5.8
 pushd ..
-cp -a libepoxy-1.5.7 build32
+cp -a libepoxy-1.5.8 build32
 popd
 
 %build
@@ -95,7 +95,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1620229910
+export SOURCE_DATE_EPOCH=1621618184
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -127,7 +127,7 @@ meson test -C builddir || : || :
 
 %install
 mkdir -p %{buildroot}/usr/share/package-licenses/libepoxy
-cp %{_builddir}/libepoxy-1.5.7/COPYING %{buildroot}/usr/share/package-licenses/libepoxy/00f34512740377ad1f155eaa15936e472661c5e3
+cp %{_builddir}/libepoxy-1.5.8/COPYING %{buildroot}/usr/share/package-licenses/libepoxy/00f34512740377ad1f155eaa15936e472661c5e3
 pushd ../build32/
 DESTDIR=%{buildroot} ninja -C builddir install
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
