@@ -4,10 +4,10 @@
 #
 %define keepstatic 1
 Name     : libepoxy
-Version  : 1.5.9
-Release  : 42
-URL      : https://github.com/anholt/libepoxy/releases/download/1.5.9/libepoxy-1.5.9.tar.xz
-Source0  : https://github.com/anholt/libepoxy/releases/download/1.5.9/libepoxy-1.5.9.tar.xz
+Version  : 1.5.10
+Release  : 43
+URL      : https://github.com/anholt/libepoxy/archive/1.5.10/libepoxy-1.5.10.tar.gz
+Source0  : https://github.com/anholt/libepoxy/archive/1.5.10/libepoxy-1.5.10.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : MIT
@@ -84,10 +84,10 @@ license components for the libepoxy package.
 
 
 %prep
-%setup -q -n libepoxy-1.5.9
-cd %{_builddir}/libepoxy-1.5.9
+%setup -q -n libepoxy-1.5.10
+cd %{_builddir}/libepoxy-1.5.10
 pushd ..
-cp -a libepoxy-1.5.9 build32
+cp -a libepoxy-1.5.10 build32
 popd
 
 %build
@@ -95,19 +95,19 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1629132484
+export SOURCE_DATE_EPOCH=1647894391
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mprefer-vector-width=256 "
-export FCFLAGS="$FFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mprefer-vector-width=256 "
-export FFLAGS="$FFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mprefer-vector-width=256 "
-export CXXFLAGS="$CXXFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mprefer-vector-width=256 "
+export CFLAGS="$CFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
+export FCFLAGS="$FFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
+export FFLAGS="$FFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
+export CXXFLAGS="$CXXFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
 CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" meson --libdir=lib64 --prefix=/usr --buildtype=plain -Dglx=yes  builddir
 ninja -v -C builddir
 pushd ../build32/
-export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
 export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
 export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
 export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
@@ -121,18 +121,24 @@ export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-meson test -C builddir || :
+meson test -C builddir --print-errorlogs || :
 cd ../build32;
-meson test -C builddir || : || :
+meson test -C builddir --print-errorlogs || : || :
 
 %install
 mkdir -p %{buildroot}/usr/share/package-licenses/libepoxy
-cp %{_builddir}/libepoxy-1.5.9/COPYING %{buildroot}/usr/share/package-licenses/libepoxy/00f34512740377ad1f155eaa15936e472661c5e3
+cp %{_builddir}/libepoxy-1.5.10/COPYING %{buildroot}/usr/share/package-licenses/libepoxy/00f34512740377ad1f155eaa15936e472661c5e3
 pushd ../build32/
 DESTDIR=%{buildroot} ninja -C builddir install
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
 then
 pushd %{buildroot}/usr/lib32/pkgconfig
+for i in *.pc ; do ln -s $i 32$i ; done
+popd
+fi
+if [ -d %{buildroot}/usr/share/pkgconfig ]
+then
+pushd %{buildroot}/usr/share/pkgconfig
 for i in *.pc ; do ln -s $i 32$i ; done
 popd
 fi
