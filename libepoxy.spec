@@ -8,7 +8,7 @@
 %define keepstatic 1
 Name     : libepoxy
 Version  : 1.5.10
-Release  : 44
+Release  : 45
 URL      : https://github.com/anholt/libepoxy/archive/1.5.10/libepoxy-1.5.10.tar.gz
 Source0  : https://github.com/anholt/libepoxy/archive/1.5.10/libepoxy-1.5.10.tar.gz
 Summary  : No detailed summary available
